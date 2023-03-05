@@ -97,6 +97,10 @@ namespace Web_API.Controllers
                 var ticket = context.Tickets.FirstOrDefault(t => t.Number == id);
                 if (ticket != null)
                 {
+                    if(ticket.ReservedBy != null)
+                    {
+                        return BadRequest("Ticket is already reserved!");
+                    }
                     ticket.ReservedBy = user;
                     context.SaveChanges();
                     return Ok(ticket);
