@@ -4,7 +4,7 @@ using Web_API.Models;
 
 namespace WEP_API.Tests;
 
-public class TicketUserCaseTests
+public class TicketUseCaseTests
 {
     HttpClient _client;
 
@@ -49,7 +49,7 @@ public class TicketUserCaseTests
     public async Task PayTicketsBasedOnUsername()
     {
         // Create dummy tickets for test
-        var tickets = await Task.WhenAll(Enumerable.Range(1, 5)
+        var tickets = await Task.WhenAll(Enumerable.Range(1,5)
             .Select(async i => await AddDummyRequest(new Ticket
             {
                 ReservedBy = null,
@@ -71,7 +71,7 @@ public class TicketUserCaseTests
         // Ensure that all tickets are marked as payed
         var allTickets = await _client.GetFromJsonAsync<List<Ticket>>(TicketEndpoint);
 
-        foreach (var ticket in tickets.Where(t => t.ReservedBy.Equals(User)))
+        foreach (var ticket in tickets.Where(t => t.ReservedBy == User))
         {
             Assert.That(ticket.IsPaid);
         }
