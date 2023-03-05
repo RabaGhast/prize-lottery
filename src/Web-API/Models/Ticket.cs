@@ -16,6 +16,9 @@ namespace Web_API.Models
         /// <summary>
         /// The name of the person who reserved the ticket.
         /// </summary>
+        /// <remarks>
+        /// This property may be null if the ticket has not been reserved yet.
+        /// </remarks>
         public string? ReservedBy { get; set; } = null;
 
         /// <summary>

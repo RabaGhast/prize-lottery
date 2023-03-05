@@ -6,6 +6,10 @@ using Web_API.Models;
 /// </summary>
 public class LotteryContext : DbContext
 {
+    public LotteryContext()
+    {
+        Database.EnsureCreated();
+    }
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -16,4 +20,9 @@ public class LotteryContext : DbContext
     /// The tickets used in the current lottery.
     /// </summary>
     public DbSet<Ticket> Tickets { get; set; }
+
+    /// <summary>
+    /// The Prizes used in the current lottery.
+    /// </summary>
+    public DbSet<Prize> Prizes { get; set; }
 }

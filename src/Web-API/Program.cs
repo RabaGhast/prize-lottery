@@ -1,4 +1,3 @@
-using Microsoft.Data.Sqlite;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -36,11 +35,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Initialize database
-using (var context = new LotteryContext())
-{
-    context.Database.EnsureCreated();
-}
 
 app.Run();
