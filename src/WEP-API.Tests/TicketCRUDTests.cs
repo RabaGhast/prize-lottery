@@ -49,7 +49,10 @@ public class TicketCRUDTests
     [Test]
     public async Task GetTicket()
     {
-        var tickets = await _client.GetFromJsonAsync<List<Ticket>>($"{TicketEndpoint}/1");
+        // Add dummy ticket
+        var ticket = await AddTicketRequest();
+
+        var tickets = await _client.GetFromJsonAsync<Ticket>($"{TicketEndpoint}/{ticket.Number}");
         Assert.That(tickets, Is.Not.Null);
     }
 
@@ -69,12 +72,12 @@ public class TicketCRUDTests
 
         // Update the dummy ticket using its ID
         ticket.IsDrawn = true;
-        var content = new StringContent(JsonSerializer.Serialize(ticket), Encoding.UTF8, "application/json");
-        var putResponse = await _client.PutAsync($"{TicketEndpoint}/{ticket!.Number}", content);
+        var putResponse = await _client.PostAsJsonAsync($"{TicketEndpoint}", ticket);
         putResponse.EnsureSuccessStatusCode();
 
         var ticketFromPutResponse = await putResponse.Content.ReadFromJsonAsync<Ticket>();
-        Assert.That(ticketFromPutResponse, Is.EqualTo(ticket));
+        Assert.That(ticketFromPutResponse.Number, Is.EqualTo(ticket.Number));
+        Assert.That(ticketFromPutResponse.IsDrawn, Is.EqualTo(ticket.IsDrawn));
     }
 
     [Test]
@@ -94,9 +97,7 @@ public class TicketCRUDTests
 
     private async Task<Ticket> AddTicketRequest()
     {
-        var content = new StringContent(JsonSerializer.Serialize(ExampleTicket), Encoding.UTF8, "application/json");
-
-        var response = await _client.PostAsync(TicketEndpoint, content);
+        var response = await _client.PutAsJsonAsync(TicketEndpoint, ExampleTicket);
         response.EnsureSuccessStatusCode();
 
         var ticketFromResponse = await response.Content.ReadFromJsonAsync<Ticket>();

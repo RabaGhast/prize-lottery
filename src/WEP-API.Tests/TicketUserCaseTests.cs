@@ -69,8 +69,7 @@ public class TicketUserCaseTests
         payResponse.EnsureSuccessStatusCode();
 
         // Ensure that all tickets are marked as payed
-        var allTicketsResponse = await _client.GetAsync(TicketEndpoint);
-        var allTickets = await allTicketsResponse.Content.ReadFromJsonAsync<List<Ticket>>();
+        var allTickets = await _client.GetFromJsonAsync<List<Ticket>>(TicketEndpoint);
 
         foreach (var ticket in tickets.Where(t => t.ReservedBy.Equals(User)))
         {
@@ -128,7 +127,7 @@ public class TicketUserCaseTests
 
     private async Task<Ticket> AddDummyRequest(Ticket ticket)
     {
-        var response = await _client.PostAsJsonAsync(TicketEndpoint, ticket);
+        var response = await _client.PutAsJsonAsync(TicketEndpoint, ticket);
         response.EnsureSuccessStatusCode();
 
         var ticketFromResponse = await response.Content.ReadFromJsonAsync<Ticket>();

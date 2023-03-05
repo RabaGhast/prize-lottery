@@ -1,4 +1,6 @@
-﻿namespace Web_API.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Web_API.Models
 {
     /// <summary>
     /// Represents a ticket for a lottery or raffle.
@@ -8,6 +10,7 @@
         /// <summary>
         /// The number on the ticket, used to uniquely identify it.
         /// </summary>
+        [Key]
         public int Number { get; set; }
 
         /// <summary>

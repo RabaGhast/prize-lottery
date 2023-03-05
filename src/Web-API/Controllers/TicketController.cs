@@ -7,61 +7,80 @@ namespace Web_API.Controllers
     [ApiController]
     public class TicketController : ControllerBase
     {
-        private static List<Ticket> DummyData = new List<Ticket>
-        {
-            new Ticket // Not reserved
-            {
-                Number = 1,
-                ReservedBy = null,
-                IsDrawn = false,
-                IsPaid = false
-            },
-            new Ticket // Reserverd
-            {
-                Number = 2,
-                ReservedBy = "Fabian",
-                IsDrawn = true,
-                IsPaid = false
-            },
-            new Ticket // Reserved and paid
-            {
-                Number = 3,
-                ReservedBy = "Fabian",
-                IsDrawn = true,
-                IsPaid = true
-            }
-        };
-
         // GET: api/<TicketController>
         [HttpGet]
-        public IEnumerable<Ticket> Get()
+        public IEnumerable<Ticket> GetAll()
         {
-            return DummyData;
+            using (var context = new LotteryContext())
+            {
+                return context.Tickets.ToList();
+            }
         }
 
         // GET api/<TicketController>/5
         [HttpGet("{id}")]
-        public Ticket? Get(int id)
+        public IActionResult Get(int id)
         {
-            return DummyData.FirstOrDefault(t => t.Number == id);
+            using (var context = new LotteryContext())
+            {
+                var ticket = context.Tickets.FirstOrDefault(t => t.Number == id);
+                if (ticket != null)
+                {
+                    return Ok(ticket);
+                }
+                else {
+                    return NotFound();
+                }
+            }
         }
 
         // POST api/<TicketController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Ticket ticket)
         {
+            using (var context = new LotteryContext())
+            {
+                var existingTicket = context.Tickets.FirstOrDefault(t => t.Number == ticket.Number);
+                if (existingTicket != null)
+                {
+                    existingTicket.ReservedBy = ticket.ReservedBy;
+                    existingTicket.IsPaid = ticket.IsPaid;
+                    existingTicket.IsDrawn = ticket.IsDrawn;
+                    context.SaveChanges();
+                    return Ok(existingTicket);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
         }
 
-        // PUT api/<TicketController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/<TicketController>
+        [HttpPut]
+        public Ticket Put([FromBody] Ticket ticket)
         {
+            using (var context = new LotteryContext())
+            {
+                context.Tickets.Add(ticket);
+                context.SaveChanges();
+                return ticket;
+            }
         }
 
         // DELETE api/<TicketController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            using (var context = new LotteryContext())
+            {
+                var ticket = context.Tickets.FirstOrDefault(t => t.Number == id);
+                if (ticket != null)
+                {
+                    context.Tickets.Remove(ticket);
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }
