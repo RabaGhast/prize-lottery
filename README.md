@@ -5,7 +5,9 @@ The solution contains two projects:
 
 
 ## Web API
-This project is an ASP.NET Core 6 Web API. The API has built-in Swagger documentation that can be accessed from `https://localhost:44354/swagger`. This provides an easy way to test the API endpoints and understand their functionality.
+This project is an ASP.NET Core 6 Web API. It uses SQLite for storing the data.
+
+The API has built-in Swagger documentation that can be accessed from `https://localhost:44354/swagger`. This provides an easy way to test the API endpoints and understand their functionality.
 
 ### Running the API
 You can run the API either by using the .NET runtime, which will use IIS by default.
